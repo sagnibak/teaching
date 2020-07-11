@@ -49,7 +49,7 @@ class ModInt:
     __rsub__ = __sub__
     __mul__ = _gen_operation(mul, "multiplication")
     __rmul__ = __mul__
-    
+
     def __truediv__(self, other: Union[ModInt, int]) -> ModInt:
         if isinstance(other, int):
             other = ModInt(other, self.prime)
