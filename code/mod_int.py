@@ -57,6 +57,19 @@ class ModInt:
 
     __rtruediv__ = __truediv__
 
+    def __pow__(self, power: int) -> ModInt:
+        result = ModInt(1, self.prime)
+        if power < 0:
+            result, power = self.inverse(), -power - 1
+            self = result
+
+        while power > 0:
+            if power % 2 == 1:
+                result = result * self
+            self, power = self * self, power // 2
+
+        return result
+
     def __repr__(self):
         return f"ModInt(val={self.val}, prime={self.prime})"
 
