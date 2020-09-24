@@ -1,3 +1,4 @@
+# %%
 from __future__ import annotations
 from dataclasses import dataclass, FrozenInstanceError
 from operator import add, sub, mul
@@ -15,7 +16,16 @@ class ModInt:
         object.__setattr__(self, "val", self.val % self.coprime)
 
     def inverse(self) -> ModInt:
+        """Finds the inverse of `self`.
+        
+        >>> ModInt(4, 7).inverse()
+        ModInt(val=2, coprime=7)
+        """
+
         def egcd(x: int, y: int) -> Tuple[int, int, int]:
+            """Recursive Extended GCD Algorithm. This finds gcd(x, y) and along
+            with that, returns (d, a, b) such that d = ax + by.
+            """
             if y == 0:
                 return (x, 1, 0)
             else:
@@ -27,6 +37,19 @@ class ModInt:
     def _gen_operation(
         int_op: Callable[[int, int], int], name: str
     ) -> Callable[[ModInt, Union[ModInt, int]], ModInt]:
+        """Converts a binary operation between two integers `int_op` into an
+        operation between two `ModInt`s.
+
+        Parameters
+        ----------
+        int_op  a binary operation between ints
+        name    name of the operation (for debugging only)
+
+        Returns
+        -------
+        a binary operation on ModInts analogous to `int_op`
+        """
+
         def operation(self: ModInt, other: Union[ModInt, int]) -> ModInt:
             if isinstance(other, int):
                 return ModInt(
@@ -58,6 +81,22 @@ class ModInt:
     __rtruediv__ = __truediv__
 
     def __pow__(self, power: int) -> ModInt:
+        """Finds powers mod `self.coprime` by repeated squaring.
+        Linear in the number of bits in `self.val`.
+
+        >>> ModInt(2, 101) ** 6
+        ModInt(val=64, coprime=101)
+        >>> ModInt(3, 11) ** 302
+        ModInt(val=9, coprime=11)
+
+        Parameters
+        ----------
+        power  the power that `self` must be raised to
+
+        Returns
+        -------
+        (self.val ** power) % self.coprime before the end of the universe
+        """
         result = ModInt(1, self.coprime)
         if power < 0:
             result, power = self.inverse(), -power - 1
@@ -75,3 +114,6 @@ class ModInt:
 
     def __str__(self):
         return f"{self.val} (mod {self.coprime})"
+
+
+# %%
