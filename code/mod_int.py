@@ -9,10 +9,10 @@ BIG_PRIME = 2_147_483_647
 @dataclass(frozen=True)
 class ModInt:
     val: int
-    prime: int = BIG_PRIME
+    coprime: int = BIG_PRIME
 
     def __post_init__(self):
-        object.__setattr__(self, "val", self.val % self.prime)
+        object.__setattr__(self, "val", self.val % self.coprime)
 
     def inverse(self) -> ModInt:
         def egcd(x: int, y: int) -> Tuple[int, int, int]:
@@ -22,7 +22,7 @@ class ModInt:
                 d, a, b = egcd(y, x % y)  # d = ax + by
                 return (d, b, a - (x // y) * b)
 
-        return ModInt(egcd(self.prime, self.val)[2], prime=self.prime)
+        return ModInt(egcd(self.coprime, self.val)[2], coprime=self.coprime)
 
     def _gen_operation(
         int_op: Callable[[int, int], int], name: str
@@ -30,13 +30,13 @@ class ModInt:
         def operation(self: ModInt, other: Union[ModInt, int]) -> ModInt:
             if isinstance(other, int):
                 return ModInt(
-                    int_op(self.val, other % self.prime) % self.prime, self.prime
+                    int_op(self.val, other % self.coprime) % self.coprime, self.coprime
                 )
-            elif isinstance(other, ModInt) and other.prime == self.prime:
-                return ModInt(int_op(self.val, other.val) % self.prime, self.prime)
-            elif other.prime != self.prime:
+            elif isinstance(other, ModInt) and other.coprime == self.coprime:
+                return ModInt(int_op(self.val, other.val) % self.coprime, self.coprime)
+            elif other.coprime != self.coprime:
                 raise ValueError(
-                    f"Different prime moduli in {name}: {self.prime}, {other.prime}."
+                    f"Different coprime moduli in {name}: {self.coprime}, {other.coprime}."
                 )
             else:
                 raise TypeError(f"{name} not defined for {type(other)} and ModInt.")
@@ -52,13 +52,13 @@ class ModInt:
 
     def __truediv__(self, other: Union[ModInt, int]) -> ModInt:
         if isinstance(other, int):
-            other = ModInt(other, self.prime)
+            other = ModInt(other, self.coprime)
         return self * other.inverse()
 
     __rtruediv__ = __truediv__
 
     def __pow__(self, power: int) -> ModInt:
-        result = ModInt(1, self.prime)
+        result = ModInt(1, self.coprime)
         if power < 0:
             result, power = self.inverse(), -power - 1
             self = result
@@ -71,7 +71,7 @@ class ModInt:
         return result
 
     def __repr__(self):
-        return f"ModInt(val={self.val}, prime={self.prime})"
+        return f"ModInt(val={self.val}, coprime={self.coprime})"
 
     def __str__(self):
-        return f"{self.val} (mod {self.prime})"
+        return f"{self.val} (mod {self.coprime})"
