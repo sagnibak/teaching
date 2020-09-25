@@ -108,6 +108,10 @@ class ModInt:
             self, power = self * self, power // 2
 
         return result
+    
+    def to_int(self) -> int:
+        """Returns the smallest integer that equivalent to self.val % self.coprime."""
+        return self.val
 
     def __repr__(self):
         return f"ModInt(val={self.val}, coprime={self.coprime})"
