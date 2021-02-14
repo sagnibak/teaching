@@ -1,4 +1,4 @@
-# :sparkles: Sagnik's Teaching Materials :sparkles:
+# Sagnik's Teaching Materials :sparkles:
 
 I have taught CS 189 and CS 70 as a TA :fire: and as a
 [Computer Science Mentor](https://csmentors.berkeley.edu/) :seedling: for several
