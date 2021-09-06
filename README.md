@@ -12,6 +12,7 @@ have created/used over the years.
 
 ## CS 70 (Discrete Math and Probability Theory)
 - [Code :rocket:](/70-code)
+- [Fall 2021 :fire:](/fa21)
 - [CSM Spring 2021 :seedling:](/csm-sp21)
 - [Fall 2020 :fire:](/fa20)
 - [CSM Fall 2020 :seedling:](/csm-fa20)
